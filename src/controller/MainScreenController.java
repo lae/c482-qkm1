@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static ims.Main.loadView;
+
 public class MainScreenController implements Initializable {
     Stage stage;
     Parent scene;
@@ -59,8 +61,9 @@ public class MainScreenController implements Initializable {
     }
 
     @FXML
-    public void onActionAddPart(ActionEvent actionEvent) {
+    public void onActionAddPart(ActionEvent actionEvent) throws IOException {
         stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+        loadView(stage, "/view/EditPartView.fxml");
     }
 
     @FXML
