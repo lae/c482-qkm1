@@ -3,21 +3,53 @@ package controller;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import model.Inventory;
+import model.Part;
+import model.Product;
 
-public class MainScreenController {
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class MainScreenController implements Initializable {
     Stage stage;
     Parent scene;
 
     @FXML
-    private TextField partSearch;
+    private TextField partSearch, productSearch;
 
     @FXML
-    private TextField productSearch;
+    private TableView<Part> partTableView;
+
+    @FXML
+    private TableColumn<Part, Integer> partIdCol, partInventoryCol;
+
+    @FXML
+    private TableColumn<Part, String> partNameCol;
+
+    @FXML
+    private TableColumn<Part, Double> partPriceCol;
+
+    @FXML
+    private TableView<Product> productTableView;
+
+    @FXML
+    private TableColumn<Product, Integer> productIdCol, productInventoryCol;
+
+    @FXML
+    private TableColumn<Product, String> productNameCol;
+
+    @FXML
+    private TableColumn<Product, Double> productPriceCol;
 
     @FXML
     public void onKeySearchPart(KeyEvent event) {
@@ -29,8 +61,6 @@ public class MainScreenController {
     @FXML
     public void onActionAddPart(ActionEvent actionEvent) {
         stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-        //scene = FXMLLoader.load(getClass().getResource("/view/AddPart.fxml"));
-        System.out.println("Clicked Add Part.");
     }
 
     @FXML
@@ -63,5 +93,20 @@ public class MainScreenController {
     @FXML
     public void onActionExit(ActionEvent actionEvent) {
         System.exit(0);
+    }
+
+    /**
+     * Initializes the MainScreen controller.
+     *
+     * @param url            The location used to resolve relative paths for the root object, or null if the location is not known.
+     * @param resourceBundle The resources used to localize the root object, or null if the root object was not localized.
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        partTableView.setItems(Inventory.getAllParts());
+        partIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        partNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        partInventoryCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        partPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
     }
 }
