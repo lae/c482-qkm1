@@ -1,5 +1,8 @@
 package model;
 
+/**
+ * @author Musee Ullah
+ */
 public class InHouse extends Part {
     private int machineId;
 
@@ -8,10 +11,16 @@ public class InHouse extends Part {
         this.machineId = machineId;
     }
 
+    /**
+     * @return the machine ID of the Part
+     */
     public int getMachineId() {
         return machineId;
     }
 
+    /**
+     * @param machineId the machine ID to set the Part to
+     */
     public void setMachineId(int machineId) {
         this.machineId = machineId;
     }

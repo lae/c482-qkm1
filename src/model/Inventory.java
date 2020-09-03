@@ -3,10 +3,18 @@ package model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+/**
+ * @author Musee Ullah
+ */
 public class Inventory {
     private static ObservableList<Part> allParts = FXCollections.observableArrayList();
     private static ObservableList<Product> allProducts = FXCollections.observableArrayList();
 
+    /**
+     * Inserts a new Part into the Inventory.
+     *
+     * @param newPart A new Part.
+     */
     public static void addPart(Part newPart) {
         allParts.add(newPart);
     }
@@ -24,10 +32,18 @@ public class Inventory {
         
     }*/
 
+    /**
+     * @return A list of all Parts.
+     */
     public static ObservableList<Part> getAllParts() {
         return allParts;
     }
 
+    /**
+     * Inserts a new Product into the Inventory.
+     *
+     * @param newProduct A new Product.
+     */
     public static void addProduct(Product newProduct) {
         allProducts.add(newProduct);
     }
@@ -45,6 +61,9 @@ public class Inventory {
         
     }*/
 
+    /**
+     * @return A list of all Products.
+     */
     public static ObservableList<Product> getAllProducts() {
         return allProducts;
     }

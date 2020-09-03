@@ -14,6 +14,9 @@ import java.util.Optional;
 import static ims.Main.fixAlertDisplay;
 import static ims.Main.loadView;
 
+/**
+ * @author Musee Ullah
+ */
 public class EditPartController {
     private Stage stage;
     private Parent scene;

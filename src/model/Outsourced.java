@@ -1,5 +1,8 @@
 package model;
 
+/**
+ * @author Musee Ullah
+ */
 public class Outsourced extends Part {
     private String companyName;
 
@@ -8,10 +11,16 @@ public class Outsourced extends Part {
         this.companyName = companyName;
     }
 
+    /**
+     * @return the name of the company this Part is made by
+     */
     public String getCompanyName() {
         return companyName;
     }
 
+    /**
+     * @param companyName the name of the company this Part is made by to set
+     */
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
     }

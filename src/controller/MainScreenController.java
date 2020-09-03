@@ -22,6 +22,9 @@ import java.util.ResourceBundle;
 
 import static ims.Main.loadView;
 
+/**
+ * @author Musee Ullah
+ */
 public class MainScreenController implements Initializable {
     Stage stage;
     Parent scene;
