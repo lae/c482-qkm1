@@ -104,4 +104,32 @@ public class Product {
     public void setMax(int max) {
         this.max = max;
     }
+
+    /**
+     * Adds an associated Part.
+     *
+     * @param part the Part to associate.
+     */
+    public void addAssociatedPart(Part part) {
+        associatedParts.add(part);
+    }
+
+    /**
+     * Deletes an associated Part reference.
+     *
+     * @param selectedAssociatedPart the Part to delete.
+     * @return true if list contained the specified Part.
+     */
+    public boolean deleteAssociatedPart(Part selectedAssociatedPart) {
+        return associatedParts.remove(selectedAssociatedPart);
+    }
+
+    /**
+     * Gets a list of associated Parts.
+     *
+     * @return a list of associated Parts.
+     */
+    public ObservableList<Part> getAllAssociatedParts() {
+        return associatedParts;
+    }
 }
