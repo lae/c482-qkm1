@@ -56,9 +56,15 @@ public class MainScreenController implements Initializable {
     @FXML
     private TableColumn<Product, Double> productPriceCol;
 
+    /**
+     * Filters the PartTable by user-provided query.
+     *
+     * @param event any keyboard action the user performs.
+     */
     @FXML
     public void onKeySearchPart(KeyEvent event) {
         String searchInput = partSearch.getText();
+        partTableView.setItems(Inventory.getFilteredParts(searchInput));
 
         Platform.runLater(() -> System.out.println("Searched Part: " + searchInput));
     }
@@ -77,9 +83,15 @@ public class MainScreenController implements Initializable {
     public void onActionDeletePart(ActionEvent actionEvent) {
     }
 
+    /**
+     * Filters the ProductTable by user-provided query.
+     *
+     * @param event any keyboard action the user performs.
+     */
     @FXML
     public void onKeySearchProduct(KeyEvent event) {
         String searchInput = productSearch.getText();
+        productTableView.setItems(Inventory.getFilteredProducts(searchInput));
 
         Platform.runLater(() -> System.out.println("Searched Product: " + searchInput));
     }
@@ -103,6 +115,7 @@ public class MainScreenController implements Initializable {
 
     /**
      * Initializes the MainScreen controller.
+     * Initializes the TableViews with initial contents and TableColumn/model associations.
      *
      * @param url            The location used to resolve relative paths for the root object, or null if the location is not known.
      * @param resourceBundle The resources used to localize the root object, or null if the root object was not localized.
@@ -110,9 +123,14 @@ public class MainScreenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         partTableView.setItems(Inventory.getAllParts());
+        productTableView.setItems(Inventory.getAllProducts());
         partIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        productIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         partNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        productNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         partInventoryCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        productInventoryCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
         partPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
+        productPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
     }
 }
