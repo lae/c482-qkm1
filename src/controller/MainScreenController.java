@@ -3,12 +3,10 @@ package controller;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
@@ -20,6 +18,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static ims.Main.fixAlertDisplay;
 import static ims.Main.loadView;
 
 /**
@@ -69,14 +68,39 @@ public class MainScreenController implements Initializable {
         Platform.runLater(() -> System.out.println("Searched Part: " + searchInput));
     }
 
+    /**
+     * Switches to an Add Part form.
+     *
+     * @param actionEvent an action a user performs.
+     * @throws IOException an I/O error.
+     */
     @FXML
     public void onActionAddPart(ActionEvent actionEvent) throws IOException {
         stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
-        loadView(stage, "/view/EditPartView.fxml");
+        FXMLLoader loader = loadView(stage, "/view/EditPartView.fxml");
+        EditPartController editCtrl = loader.getController();
+        editCtrl.startAdd();
     }
 
+    /**
+     * Switches to a Modify Part form.
+     *
+     * @param actionEvent an action a user performs.
+     * @throws IOException an I/O error.
+     */
     @FXML
-    public void onActionModifyPart(ActionEvent actionEvent) {
+    public void onActionModifyPart(ActionEvent actionEvent) throws IOException {
+        if (partTableView.getSelectionModel().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "You must select a part to modify!");
+            fixAlertDisplay(alert);
+            alert.showAndWait();
+            return;
+        }
+
+        stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+        FXMLLoader loader = loadView(stage, "/view/EditPartView.fxml");
+        EditPartController editCtrl = loader.getController();
+        editCtrl.startEdit(partTableView.getSelectionModel().getSelectedItem());
     }
 
     @FXML

@@ -7,6 +7,9 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
+import model.InHouse;
+import model.Outsourced;
+import model.Part;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -18,9 +21,10 @@ import static ims.Main.loadView;
  * @author Musee Ullah
  */
 public class EditPartController {
+    private final String labelAltTextInHouse = "Machine ID";
+    private final String labelAltTextOutsourced = "Company Name";
     private Stage stage;
     private Parent scene;
-
     @FXML
     private Label labelViewTitle, labelAlt;
     @FXML
@@ -31,6 +35,41 @@ public class EditPartController {
     private TextField inputId, inputName, inputStock, inputPrice, inputMax, inputMin, inputAlt;
 
     /**
+     * Updates the view to that of an Add Part form.
+     */
+    public void startAdd() {
+        labelViewTitle.setText("Add Part");
+        labelAlt.setText(labelAltTextInHouse);
+        inputSourceIn.setSelected(true);
+        inputId.setText("To be calculated.");
+    }
+
+    /**
+     * Updates the view to that of an Edit Part form.
+     * This populates fields with information from an existing part.
+     *
+     * @param selectedPart the Part to edit.
+     */
+    public void startEdit(Part selectedPart) {
+        labelViewTitle.setText("Edit Part");
+        if (selectedPart instanceof InHouse) {
+            labelAlt.setText(labelAltTextInHouse);
+            inputSourceIn.setSelected(true);
+            inputAlt.setText(String.valueOf(((InHouse) selectedPart).getMachineId()));
+        } else if (selectedPart instanceof Outsourced) {
+            labelAlt.setText(labelAltTextOutsourced);
+            inputSourceOut.setSelected(true);
+            inputAlt.setText(String.valueOf(((Outsourced) selectedPart).getCompanyName()));
+        }
+        inputId.setText(String.valueOf(selectedPart.getId()));
+        inputName.setText(selectedPart.getName());
+        inputStock.setText(String.valueOf(selectedPart.getStock()));
+        inputPrice.setText(String.valueOf(selectedPart.getPrice()));
+        inputMax.setText(String.valueOf(selectedPart.getMax()));
+        inputMin.setText(String.valueOf(selectedPart.getMin()));
+    }
+
+    /**
      * Updates UI to reflect a Part's sourcing.
      * This updates available fields in the edit dialog depending on whether Outsourced or In-House is selected.
      *
@@ -39,9 +78,9 @@ public class EditPartController {
     @FXML
     public void onActionChangeSource(ActionEvent actionEvent) {
         if (inputSourceIn.isSelected()) {
-            labelAlt.setText("Machine ID");
+            labelAlt.setText(labelAltTextInHouse);
         } else if (inputSourceOut.isSelected()) {
-            labelAlt.setText("Company Name");
+            labelAlt.setText(labelAltTextOutsourced);
         }
     }
 
@@ -85,7 +124,7 @@ public class EditPartController {
      * This checks with the user whether or not they want to discard their changes and go back.
      *
      * @param actionEvent A user input event.
-     * @throws IOException　さあ
+     * @throws IOException さあ
      */
     @FXML
     public void onActionCancel(ActionEvent actionEvent) throws IOException {

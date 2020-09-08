@@ -44,16 +44,22 @@ public class Main extends Application {
      *
      * @param stage The stage to update.
      * @param view  Path to the FXML document for the new View.
+     * @return an instance of the FXMLLoader to interact with, if necessary.
      * @throws IOException さあ
      */
-    public static void loadView(Stage stage, String view) throws IOException {
-        Scene scene = new Scene(FXMLLoader.load(Main.class.getResource(view)));
+    public static FXMLLoader loadView(Stage stage, String view) throws IOException {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(Main.class.getResource(view));
+        loader.load();
+        Scene scene = new Scene(loader.getRoot());
         stage.setScene(scene);
         stage.sizeToScene();
         stage.show();
         /* Ensures that the main screen can't be resized to smaller than necessary. */
         stage.setMinHeight(stage.getHeight());
         stage.setMinWidth(stage.getWidth());
+
+        return loader;
     }
 
     /**
