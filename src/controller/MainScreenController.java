@@ -64,8 +64,6 @@ public class MainScreenController implements Initializable {
     public void onKeySearchPart(KeyEvent event) {
         String searchInput = partSearch.getText();
         partTableView.setItems(Inventory.getFilteredParts(searchInput));
-
-        Platform.runLater(() -> System.out.println("Searched Part: " + searchInput));
     }
 
     /**
@@ -116,8 +114,6 @@ public class MainScreenController implements Initializable {
     public void onKeySearchProduct(KeyEvent event) {
         String searchInput = productSearch.getText();
         productTableView.setItems(Inventory.getFilteredProducts(searchInput));
-
-        Platform.runLater(() -> System.out.println("Searched Product: " + searchInput));
     }
 
     @FXML

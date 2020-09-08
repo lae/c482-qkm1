@@ -7,8 +7,8 @@ import javafx.collections.ObservableList;
  * @author Musee Ullah
  */
 public class Inventory {
-    private static ObservableList<Part> allParts = FXCollections.observableArrayList();
-    private static ObservableList<Product> allProducts = FXCollections.observableArrayList();
+    private static final ObservableList<Part> allParts = FXCollections.observableArrayList();
+    private static final ObservableList<Product> allProducts = FXCollections.observableArrayList();
     private static ObservableList<Part> filteredParts = FXCollections.observableArrayList();
     private static ObservableList<Product> filteredProducts = FXCollections.observableArrayList();
     private static String lastPartSearch = "";
@@ -23,18 +23,61 @@ public class Inventory {
         allParts.add(newPart);
     }
 
-    /*public static Part lookupPart(int partId) {
+    /**
+     * Looks up a Part by ID.
+     *
+     * @param partId An ID to match against.
+     * @return the first Part whose ID matches the given ID.
+     */
+    public static Part lookupPart(int partId) {
+        for (Part part : allParts) {
+            if (part.getId() == partId) {
+                return part;
+            }
+        }
 
+        return null;
     }
+
+    /**
+     * Filters the Parts Inventory by a user-provided string.
+     * Part names are matched in a case-insensitive fashion into a new list and returned.
+     *
+     * @param partName A lookup string to match against Part names.
+     * @return A list of Parts that match the given string.
+     */
     public static ObservableList<Part> lookupPart(String partName) {
-        
+        ObservableList<Part> result = FXCollections.observableArrayList();
+        partName = partName.toLowerCase();
+
+        for (Part part : allParts) {
+            if (part.getName().toLowerCase().contains(partName)) {
+                result.add(part);
+            }
+        }
+
+        return result;
     }
-    public static void updatePart(int index, Part selectedPart) {
-        
+
+    /**
+     * Updates a Part.
+     *
+     * @param index   the position in the inventory list where the Part is stored.
+     * @param newPart the updated Part object to update the inventory with.
+     */
+    public static void updatePart(int index, Part newPart) {
+        allParts.set(index, newPart);
     }
+
+    /**
+     * Deletes a Part.
+     *
+     * @param selectedPart the Part object to delete.
+     * @return true if the inventory contained the specified Part.
+     */
     public static boolean deletePart(Part selectedPart) {
-        
-    }*/
+        return allParts.remove(selectedPart);
+    }
 
     /**
      * @return A list of all Parts.
@@ -52,19 +95,26 @@ public class Inventory {
      */
     public static ObservableList<Part> getFilteredParts(String searchQuery) {
         // If we get a query for the same string twice in a row, no extra work needs to be done.
-        if(searchQuery == lastPartSearch) {
+        if (searchQuery.equals(lastPartSearch)) {
             return filteredParts;
         }
 
         filteredParts.clear();
-        for (Part part : allParts) {
-            // Case-insensitive string matching
-            if(part.getName().toLowerCase().contains(searchQuery.toLowerCase())) {
-                filteredParts.add(part);
+
+        // If the search query is a positive integer, we want to lookup a Part whose ID matches.
+        // However, it's possible that the part name also has digits, so we want to return those as well.
+        if (searchQuery.matches("\\d+")) {
+            int lookupId = Integer.parseInt(searchQuery);
+            Part foundPart = Inventory.lookupPart(lookupId);
+            if (foundPart != null) {
+                filteredParts.add(foundPart);
             }
-            else if(String.valueOf(part.getId()).contains(searchQuery)) {
-                filteredParts.add(part);
-            }
+            ObservableList<Part> foundParts = Inventory.lookupPart(searchQuery);
+            // There's a chance that lookupPart will include the Part found earlier, so ensure it's not duplicated.
+            foundParts.removeIf(p -> (p.getId() == lookupId));
+            filteredParts.addAll(foundParts);
+        } else {
+            filteredParts = Inventory.lookupPart(searchQuery);
         }
 
         // Store the search string associated with the current state of filteredParts
@@ -81,18 +131,61 @@ public class Inventory {
         allProducts.add(newProduct);
     }
 
-    /*public static Product lookupProduct(int productId) {
+    /**
+     * Looks up a Product by ID.
+     *
+     * @param productId An ID to match against.
+     * @return the first Product whose ID matches the given ID.
+     */
+    public static Product lookupProduct(int productId) {
+        for (Product product : allProducts) {
+            if (product.getId() == productId) {
+                return product;
+            }
+        }
 
+        return null;
     }
+
+    /**
+     * Filters the Products Inventory by a user-provided string.
+     * Product names are matched in a case-insensitive fashion into a new list and returned.
+     *
+     * @param productName A lookup string to match against Product names.
+     * @return A list of Products that match the given string.
+     */
     public static ObservableList<Product> lookupProduct(String productName) {
-        
+        ObservableList<Product> result = FXCollections.observableArrayList();
+        productName = productName.toLowerCase();
+
+        for (Product product : allProducts) {
+            if (product.getName().toLowerCase().contains(productName)) {
+                result.add(product);
+            }
+        }
+
+        return result;
     }
-    public static void updateProduct(int index, Product selectedProduct) {
-        
+
+    /**
+     * Updates a Product.
+     *
+     * @param index      the position in the inventory list where the Product is stored.
+     * @param newProduct the updated Product object to update the inventory with.
+     */
+    public static void updateProduct(int index, Product newProduct) {
+        allProducts.set(index, newProduct);
     }
+
+    /**
+     * Deletes a Product.
+     *
+     * @param selectedProduct the Product object to delete.
+     * @return true if the inventory contained the specified Product.
+     */
     public static boolean deleteProduct(Product selectedProduct) {
-        
-    }*/
+        return allProducts.remove(selectedProduct);
+    }
 
     /**
      * @return A list of all Products.
@@ -109,23 +202,29 @@ public class Inventory {
      * @return A list of filtered Parts.
      */
     public static ObservableList<Product> getFilteredProducts(String searchQuery) {
-        // This function could probably be deduplicated but since Product and Part are their own parent classes,
+        // This function could probably be de-duplicated but since Product and Part are their own parent classes,
         // it's not really a good idea for maintainability so leaving this as-is.
 
         // If we get a query for the same string twice in a row, no extra work needs to be done.
-        if(searchQuery == lastProductSearch) {
+        if (searchQuery.equals(lastProductSearch)) {
             return filteredProducts;
         }
 
         filteredProducts.clear();
-        for (Product product : allProducts) {
-            // Case-insensitive string matching
-            if(product.getName().toLowerCase().contains(searchQuery.toLowerCase())) {
-                filteredProducts.add(product);
+        // If the search query is a positive integer, we want to lookup a Product whose ID matches.
+        // However, it's possible that the product name also has digits, so we want to return those as well.
+        if (searchQuery.matches("\\d+")) {
+            int lookupId = Integer.parseInt(searchQuery);
+            Product foundProduct = Inventory.lookupProduct(lookupId);
+            if (foundProduct != null) {
+                filteredProducts.add(foundProduct);
             }
-            else if(String.valueOf(product.getId()).contains(searchQuery)) {
-                filteredProducts.add(product);
-            }
+            ObservableList<Product> foundProducts = Inventory.lookupProduct(searchQuery);
+            // There's a chance that lookupProduct will include the Product found earlier, so ensure it's not duplicated.
+            foundProducts.removeIf(p -> (p.getId() == lookupId));
+            filteredProducts.addAll(foundProducts);
+        } else {
+            filteredProducts = Inventory.lookupProduct(searchQuery);
         }
 
         // Store the search string associated with the current state of filteredProducts
