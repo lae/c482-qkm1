@@ -26,7 +26,7 @@ public class Inventory {
     /**
      * Looks up a Part by ID.
      *
-     * @param partId An ID to match against.
+     * @param partId The unique identifier of the Part.
      * @return the first Part whose ID matches the given ID.
      */
     public static Part lookupPart(int partId) {
@@ -134,7 +134,7 @@ public class Inventory {
     /**
      * Looks up a Product by ID.
      *
-     * @param productId An ID to match against.
+     * @param productId The unique identifier of the Product.
      * @return the first Product whose ID matches the given ID.
      */
     public static Product lookupProduct(int productId) {
