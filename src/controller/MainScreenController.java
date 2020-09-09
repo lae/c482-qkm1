@@ -16,6 +16,7 @@ import model.Product;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static ims.Main.fixAlertDisplay;
@@ -101,8 +102,27 @@ public class MainScreenController implements Initializable {
         editCtrl.startEdit(partTableView.getSelectionModel().getSelectedItem());
     }
 
+    /**
+     * Deletes a Part that the user has selected.
+     *
+     * @param actionEvent an action a user performs.
+     */
     @FXML
     public void onActionDeletePart(ActionEvent actionEvent) {
+        if (partTableView.getSelectionModel().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "You must select a part to delete!");
+            fixAlertDisplay(alert);
+            alert.showAndWait();
+            return;
+        }
+
+        Part selectedPart = partTableView.getSelectionModel().getSelectedItem();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete the following part?\n\n" + selectedPart.getName());
+        fixAlertDisplay(alert);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            Inventory.deletePart(selectedPart);
+        }
     }
 
     /**
