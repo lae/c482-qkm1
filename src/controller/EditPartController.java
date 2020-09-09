@@ -2,29 +2,28 @@ package controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import model.InHouse;
+import model.Inventory;
 import model.Outsourced;
 import model.Part;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 
-import static ims.Main.fixAlertDisplay;
-import static ims.Main.loadView;
+import static ims.Main.*;
 
 /**
  * @author Musee Ullah
  */
 public class EditPartController {
+    private final String newIdText = "To be calculated";
     private final String labelAltTextInHouse = "Machine ID";
     private final String labelAltTextOutsourced = "Company Name";
     private Stage stage;
-    private Parent scene;
+    private int partIndex = -1;
     @FXML
     private Label labelViewTitle, labelAlt;
     @FXML
@@ -41,17 +40,18 @@ public class EditPartController {
         labelViewTitle.setText("Add Part");
         labelAlt.setText(labelAltTextInHouse);
         inputSourceIn.setSelected(true);
-        inputId.setText("To be calculated.");
+        inputId.setText(newIdText);
     }
 
     /**
      * Updates the view to that of an Edit Part form.
      * This populates fields with information from an existing part.
      *
-     * @param selectedPart the Part to edit.
+     * @param selectedIndex the index of the Part to edit.
+     * @param selectedPart  the Part to edit.
      */
-    public void startEdit(Part selectedPart) {
-        labelViewTitle.setText("Edit Part");
+    public void startEdit(int selectedIndex, Part selectedPart) {
+        labelViewTitle.setText("Modify Part");
         if (selectedPart instanceof InHouse) {
             labelAlt.setText(labelAltTextInHouse);
             inputSourceIn.setSelected(true);
@@ -67,6 +67,7 @@ public class EditPartController {
         inputPrice.setText(String.valueOf(selectedPart.getPrice()));
         inputMax.setText(String.valueOf(selectedPart.getMax()));
         inputMin.setText(String.valueOf(selectedPart.getMin()));
+        partIndex = selectedIndex;
     }
 
     /**
@@ -85,6 +86,39 @@ public class EditPartController {
     }
 
     /**
+     * Validates that a given input is a positive integer.
+     * Checks that an input can be parsed as an integer and if not, appends an error to a provided array.
+     *
+     * @param input A user input text field.
+     * @param validationErrors A reference to the error list to modify.
+     * @param fieldName Name of the field as shown in the UI.
+     * @return the parsed integer.
+     */
+    private int validatePositiveInteger(TextField input, ArrayList<String> validationErrors, String fieldName) {
+        if (input.getText().matches("\\d+")) {
+            return Integer.parseInt(input.getText());
+        }
+        validationErrors.add(fieldName + " must be a positive integer.");
+        return 0;
+    }
+    /**
+     * Validates that a given input is a double.
+     * Checks that an input can be parsed as a double and if not, appends an error to a provided array.
+     *
+     * @param input A user input text field.
+     * @param validationErrors A reference to the error list to modify.
+     * @param fieldName Name of the field as shown in the UI.
+     * @return the parsed double.
+     */
+    private double validateDouble(TextField input, ArrayList<String> validationErrors, String fieldName) {
+        if (input.getText().matches("-?\\d+(\\.\\d+)?")) {
+            return Double.parseDouble(input.getText());
+        }
+        validationErrors.add(fieldName + " must be a decimal number.");
+        return 0;
+    }
+
+    /**
      * Saves changes and returns to the Main Screen.
      * This confirms changes with the user about the Part they're adding or modifying and then saves those changes.
      *
@@ -93,26 +127,57 @@ public class EditPartController {
      */
     @FXML
     public void onActionSavePart(ActionEvent actionEvent) throws IOException {
-        String confirmData = String.format(
-                "Name: %s\nInventory: %s\nUnit Price: %s\nMax: %s\nMin: %s\n%s: %s", inputName.getText(),
-                inputStock.getText(), inputPrice.getText(), inputMax.getText(),
-                inputMin.getText(), labelAlt.getText(), inputAlt.getText());
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        Label confirmLabel = new Label("Please review the following details and confirm they are correct.");
-        TextArea confirmTA = new TextArea(confirmData);
-        confirmTA.setEditable(false);
-        confirmTA.setWrapText(true);
-        confirmTA.setMaxHeight(Double.MAX_VALUE);
-        GridPane.setHgrow(confirmTA, Priority.ALWAYS);
-        GridPane confirmContent = new GridPane();
-        confirmContent.add(confirmLabel, 0, 0);
-        confirmContent.add(confirmTA, 0, 1);
-        alert.getDialogPane().setContent(confirmContent);
+        ArrayList<String> validationErrors = new ArrayList<>();
+        Part stagedPart;
 
+        // Parse and validate the form data, storing validation errors in an array.
+        int id = inputId.getText().equals(newIdText) ? Inventory.getNextPartId() : Integer.parseInt(inputId.getText());
+        String name = inputName.getText();
+        int stock = validatePositiveInteger(inputStock, validationErrors, "Inv");
+        double price = validateDouble(inputPrice, validationErrors, "Price/Cost");
+        int max = validatePositiveInteger(inputMax, validationErrors, "Max");
+        int min = validatePositiveInteger(inputMin, validationErrors, "Min");
+        if (min > max) {
+            validationErrors.add("Min must be less than Max.");
+        }
+        if (stock < min || stock > max) {
+            validationErrors.add("Inv must be greater than Min and less than Max.");
+        }
+        // And depending on the selection, initialize our staged part appropriately.
+        if (inputSourceIn.isSelected()) {
+            int machineId = validatePositiveInteger(inputAlt, validationErrors, labelAltTextInHouse);
+            stagedPart = new InHouse(id, name, price, stock, min, max, machineId);
+        } else {
+            String companyName = inputAlt.getText();
+            stagedPart = new Outsourced(id, name, price, stock, min, max, companyName);
+        }
+
+        // Inform the user if any validation failed, and return to the edit screen if so.
+        if (validationErrors.size() > 0) {
+            Alert alert = detailedAlert(Alert.AlertType.ERROR, "One or more fields failed to validate. Please " +
+                    "review the following and make the necessary corrections.", String.join("\n", validationErrors));
+            fixAlertDisplay(alert);
+            alert.showAndWait();
+            return;
+        }
+
+        // Prepare and display a confirmation dialog showing (mostly) parsed values.
+        String confirmData = String.format("ID: %d\nName: %s\nInventory: %d\nUnit Price: %.2f\nMax: %d\nMin: %d\n%s: %s",
+                id, name, stock, price, max, min, labelAlt.getText(), inputAlt.getText());
+        Alert alert = detailedAlert(Alert.AlertType.CONFIRMATION,
+                "Please review the following details and confirm they are correct.", confirmData);
         fixAlertDisplay(alert);
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isEmpty() || result.get() != ButtonType.OK) {
             return;
+        }
+
+        // Check if a partIndex was specified for an existing part we're editing, and update that particular part in the
+        // inventory, otherwise create a new one, and then return to the main screen.
+        if (partIndex > 0) {
+            Inventory.updatePart(partIndex, stagedPart);
+        } else {
+            Inventory.addPart(stagedPart);
         }
 
         stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();

@@ -102,7 +102,7 @@ public class Inventory {
      * Part names and IDs are matched in a case-insensitive fashion and are stored in a static variable.
      *
      * @param searchQuery A lookup string to match against Part names and IDs.
-     * @param reset if true, ensure that the search executes again
+     * @param reset       if true, ensure that the search executes again
      * @return A list of filtered Parts.
      */
     public static ObservableList<Part> getFilteredParts(String searchQuery, boolean reset) {
@@ -222,7 +222,7 @@ public class Inventory {
      * Part names and IDs are matched in a case-insensitive fashion and are stored in a static variable.
      *
      * @param searchQuery A lookup string to match against Part names and IDs.
-     * @param reset if true, ensure that the search executes again
+     * @param reset       if true, ensure that the search executes again
      * @return A list of filtered Parts.
      */
     public static ObservableList<Product> getFilteredProducts(String searchQuery, boolean reset) {
@@ -254,5 +254,21 @@ public class Inventory {
         // Store the search string associated with the current state of filteredProducts
         lastProductSearch = searchQuery;
         return filteredProducts;
+    }
+
+    /**
+     * Identifies the next available Part ID.
+     *
+     * @return the next available Part ID.
+     */
+    public static int getNextPartId() {
+        int max = 0;
+        for (Part part : allParts) {
+            int id = part.getId();
+            if (id > max) {
+                max = id;
+            }
+        }
+        return max + 1;
     }
 }

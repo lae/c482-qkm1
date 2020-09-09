@@ -5,6 +5,10 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import model.InHouse;
 import model.Inventory;
@@ -72,6 +76,32 @@ public class Main extends Application {
     public static void fixAlertDisplay(Alert alert) {
         alert.setResizable(true);
         Platform.runLater(() -> alert.setResizable(false));
+    }
+
+    /**
+     * Wrapper function to create a detailed Alert.
+     * This prepares a label and expanded textarea in a typical alert dialog.
+     *
+     * @param type    The type of alert, e.g. confirmation or error.
+     * @param message The headlining message of the alert prompt.
+     * @param details Specific details associated with the alert that are relevant to the user.
+     * @return an instance of the Alert object to act upon.
+     */
+    public static Alert detailedAlert(Alert.AlertType type, String message, String details) {
+        Alert alert = new Alert(type);
+        Label topMessage = new Label(message);
+        TextArea detailsBox = new TextArea(details);
+
+        detailsBox.setEditable(false);
+        detailsBox.setWrapText(true);
+        detailsBox.setMaxHeight(Double.MAX_VALUE);
+        GridPane.setHgrow(detailsBox, Priority.ALWAYS);
+        GridPane body = new GridPane();
+        body.add(topMessage, 0, 0);
+        body.add(detailsBox, 0, 1);
+        alert.getDialogPane().setContent(body);
+
+        return alert;
     }
 
     /**

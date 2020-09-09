@@ -130,7 +130,7 @@ public class MainScreenController implements Initializable {
         stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
         FXMLLoader loader = loadView(stage, "/view/EditPartView.fxml");
         EditPartController editCtrl = loader.getController();
-        editCtrl.startEdit(partTableView.getSelectionModel().getSelectedItem());
+        editCtrl.startEdit(partTableView.getSelectionModel().getSelectedIndex(), partTableView.getSelectionModel().getSelectedItem());
     }
 
     /**
