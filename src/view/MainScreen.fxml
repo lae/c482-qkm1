@@ -43,6 +43,9 @@
                                AnchorPane.leftAnchor="128.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
                 </AnchorPane>
                 <TableView fx:id="partTableView" VBox.vgrow="ALWAYS">
+                    <placeholder>
+                        <Label fx:id="partTablePlaceholder" text="Click Add to add a new part."/>
+                    </placeholder>
                     <columns>
                         <TableColumn fx:id="partIdCol" minWidth="32.0" text="ID"/>
                         <TableColumn fx:id="partNameCol" minWidth="288.0" text="Part Name"/>
@@ -81,6 +84,9 @@
                                AnchorPane.leftAnchor="128.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"/>
                 </AnchorPane>
                 <TableView fx:id="productTableView" VBox.vgrow="ALWAYS">
+                    <placeholder>
+                        <Label fx:id="productTablePlaceholder" text="Click Add to add a new product."/>
+                    </placeholder>
                     <columns>
                         <TableColumn fx:id="productIdCol" minWidth="32.0" text="ID"/>
                         <TableColumn fx:id="productNameCol" minWidth="288.0" text="Product Name"/>

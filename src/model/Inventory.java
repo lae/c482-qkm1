@@ -87,15 +87,27 @@ public class Inventory {
     }
 
     /**
-     * Filters the Inventory by a user-provided string.
+     * Filters the Parts Inventory by a user-provided string.
      * Part names and IDs are matched in a case-insensitive fashion and are stored in a static variable.
      *
      * @param searchQuery A lookup string to match against Part names and IDs.
      * @return A list of filtered Parts.
      */
     public static ObservableList<Part> getFilteredParts(String searchQuery) {
+        return getFilteredParts(searchQuery, false);
+    }
+
+    /**
+     * Filters the Parts Inventory by a user-provided string.
+     * Part names and IDs are matched in a case-insensitive fashion and are stored in a static variable.
+     *
+     * @param searchQuery A lookup string to match against Part names and IDs.
+     * @param reset if true, ensure that the search executes again
+     * @return A list of filtered Parts.
+     */
+    public static ObservableList<Part> getFilteredParts(String searchQuery, boolean reset) {
         // If we get a query for the same string twice in a row, no extra work needs to be done.
-        if (searchQuery.equals(lastPartSearch)) {
+        if (!reset && searchQuery.equals(lastPartSearch)) {
             return filteredParts;
         }
 
@@ -195,18 +207,30 @@ public class Inventory {
     }
 
     /**
-     * Filters the Inventory by a user-provided string.
+     * Filters the Products Inventory by a user-provided string.
      * Part names and IDs are matched in a case-insensitive fashion and are stored in a static variable.
      *
      * @param searchQuery A lookup string to match against Part names and IDs.
      * @return A list of filtered Parts.
      */
     public static ObservableList<Product> getFilteredProducts(String searchQuery) {
+        return getFilteredProducts(searchQuery, false);
+    }
+
+    /**
+     * Filters the Products Inventory by a user-provided string.
+     * Part names and IDs are matched in a case-insensitive fashion and are stored in a static variable.
+     *
+     * @param searchQuery A lookup string to match against Part names and IDs.
+     * @param reset if true, ensure that the search executes again
+     * @return A list of filtered Parts.
+     */
+    public static ObservableList<Product> getFilteredProducts(String searchQuery, boolean reset) {
         // This function could probably be de-duplicated but since Product and Part are their own parent classes,
         // it's not really a good idea for maintainability so leaving this as-is.
 
         // If we get a query for the same string twice in a row, no extra work needs to be done.
-        if (searchQuery.equals(lastProductSearch)) {
+        if (!reset && searchQuery.equals(lastProductSearch)) {
             return filteredProducts;
         }
 

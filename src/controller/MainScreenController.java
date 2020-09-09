@@ -1,11 +1,9 @@
 package controller;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
@@ -27,7 +25,9 @@ import static ims.Main.loadView;
  */
 public class MainScreenController implements Initializable {
     Stage stage;
-    Parent scene;
+
+    @FXML
+    private Label partTablePlaceholder, productTablePlaceholder;
 
     @FXML
     private TextField partSearch, productSearch;
@@ -56,6 +56,38 @@ public class MainScreenController implements Initializable {
     @FXML
     private TableColumn<Product, Double> productPriceCol;
 
+    public Part selectPart(int id) {
+        for (Part part : Inventory.getAllParts()) {
+            if (part.getId() == id) {
+                return part;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Refreshes the Parts TableView with search input.
+     */
+    private void refreshPartTable() {
+        refreshPartTable(false);
+    }
+
+    /**
+     * Refreshes the Parts TableView with search input.
+     *
+     * @param reset set to true if refreshing after updating the inventory.
+     */
+    private void refreshPartTable(boolean reset) {
+        String searchInput = partSearch.getText();
+        if (searchInput.isEmpty()) {
+            partTablePlaceholder.setText("Click Add to add a new part.");
+        } else {
+            partTablePlaceholder.setText("No items matched your search query. Please try again.");
+        }
+        partTableView.setItems(Inventory.getFilteredParts(searchInput, reset));
+    }
+
     /**
      * Filters the PartTable by user-provided query.
      *
@@ -63,8 +95,7 @@ public class MainScreenController implements Initializable {
      */
     @FXML
     public void onKeySearchPart(KeyEvent event) {
-        String searchInput = partSearch.getText();
-        partTableView.setItems(Inventory.getFilteredParts(searchInput));
+        refreshPartTable();
     }
 
     /**
@@ -90,7 +121,7 @@ public class MainScreenController implements Initializable {
     @FXML
     public void onActionModifyPart(ActionEvent actionEvent) throws IOException {
         if (partTableView.getSelectionModel().isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "You must select a part to modify!");
+            Alert alert = new Alert(Alert.AlertType.WARNING, "You must select a part to modify!");
             fixAlertDisplay(alert);
             alert.showAndWait();
             return;
@@ -122,7 +153,30 @@ public class MainScreenController implements Initializable {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
             Inventory.deletePart(selectedPart);
+            refreshPartTable(true);
         }
+    }
+
+    /**
+     * Refreshes the Products TableView with search input.
+     */
+    private void refreshProductTable() {
+        refreshProductTable(false);
+    }
+
+    /**
+     * Refreshes the Products TableView with search input.
+     *
+     * @param reset set to true if refreshing after updating the inventory.
+     */
+    private void refreshProductTable(boolean reset) {
+        String searchInput = productSearch.getText();
+        if (searchInput.isEmpty()) {
+            productTablePlaceholder.setText("Click Add to add a new product.");
+        } else {
+            productTablePlaceholder.setText("No items matched your search query. Please try again.");
+        }
+        productTableView.setItems(Inventory.getFilteredProducts(searchInput, reset));
     }
 
     /**
@@ -132,8 +186,7 @@ public class MainScreenController implements Initializable {
      */
     @FXML
     public void onKeySearchProduct(KeyEvent event) {
-        String searchInput = productSearch.getText();
-        productTableView.setItems(Inventory.getFilteredProducts(searchInput));
+        refreshProductTable();
     }
 
     @FXML
