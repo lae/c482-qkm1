@@ -1,12 +1,13 @@
 package model;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
  * @author Musee Ullah
  */
 public class Product {
-    private ObservableList<Part> associatedParts;
+    private final ObservableList<Part> associatedParts;
     private int id;
     private String name;
     private double price;
@@ -19,6 +20,17 @@ public class Product {
         this.stock = stock;
         this.min = min;
         this.max = max;
+        /* REQUIREMENT G, BULLET 1
+         * I was running into a NullPointerException when attempting to associate a Part with a Product, e.g.:
+         *      product.addAssociatedPart(Inventory.lookupPart(2));
+         * That meant that I was trying to use something that was undefined, and the stack trace pointed to it
+         * occurring within the addAssociatedPart function. lookupPart was returning a Part object just fine, so
+         * the issue was with the associatedParts instance variable.
+         * Turns out that while it was declared, it was not initialized so the add class method was trying to modify
+         * something that didn't exist. To resolve this, I initialized an empty ArrayList here when a Product object
+         * is created.
+         */
+        this.associatedParts = FXCollections.observableArrayList();
     }
 
     /**

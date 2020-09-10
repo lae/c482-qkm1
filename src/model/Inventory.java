@@ -271,4 +271,20 @@ public class Inventory {
         }
         return max + 1;
     }
+
+    /**
+     * Identifies the next available Product ID.
+     *
+     * @return the next available Product ID.
+     */
+    public static int getNextProductId() {
+        int max = 0;
+        for (Product product : allProducts) {
+            int id = product.getId();
+            if (id > max) {
+                max = id;
+            }
+        }
+        return max + 1;
+    }
 }

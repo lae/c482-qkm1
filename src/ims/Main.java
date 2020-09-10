@@ -33,9 +33,16 @@ public class Main extends Application {
         Inventory.addPart(new Outsourced(6, "Brooks B17 Narrow saddle", 130, 4, 0, 20, "Brooks"));
         Inventory.addPart(new Outsourced(7, "NOS Selle Italia Flite saddle", 225, 2, 0, 10, "Selle Italia"));
 
-        Inventory.addProduct(new Product(1, "All-City Big Block complete bike - Midnight/Frost/Violet", 999, 0, 0, 5));
-        Inventory.addProduct(new Product(2, "All-City Thunderdome complete bike - Polished Pearl", 1599, 5, 0, 20));
-        Inventory.addProduct(new Product(3, "State Bicycle Co. Undefeated II complete bike - Black Prism", 979, 0, 0, 10));
+        Product p1 = new Product(1, "All-City Big Block complete bike - Midnight/Frost/Violet", 999, 0, 0, 5);
+        p1.addAssociatedPart(Inventory.lookupPart(2));
+        Inventory.addProduct(p1);
+        Product p2 = new Product(2, "All-City Thunderdome complete bike - Polished Pearl", 1599, 5, 0, 20);
+        p2.addAssociatedPart(Inventory.lookupPart(3));
+        p2.addAssociatedPart(Inventory.lookupPart(5));
+        Inventory.addProduct(p2);
+        Product p3 = new Product(3, "State Bicycle Co. Undefeated II complete bike - Black Prism", 979, 0, 0, 10);
+        p3.addAssociatedPart(Inventory.lookupPart(1));
+        Inventory.addProduct(p3);
         Inventory.addProduct(new Product(4, "5 Bling Streamline track gloves - black", 38, 4, 2, 10));
         Inventory.addProduct(new Product(5, "Park Tool IB-1 multi-tool", 15.95, 10, 2, 20));
 

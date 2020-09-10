@@ -96,7 +96,7 @@
                 </AnchorPane>
                 <TableView fx:id="associatedPartTableView" maxHeight="192.0" VBox.vgrow="ALWAYS">
                     <placeholder>
-                        <Label fx:id="associatedPartTablePlaceholder" text="Pick a part from above and click Add."/>
+                        <Label text="Pick a part from above and click Add."/>
                     </placeholder>
                     <columns>
                         <TableColumn fx:id="associatedPartIdCol" minWidth="48.0" prefWidth="48.0" text="ID"/>
@@ -112,7 +112,7 @@
                     </VBox.margin>
                 </TableView>
                 <AnchorPane>
-                    <Button mnemonicParsing="false" onAction="#onActionDeassociatePart"
+                    <Button mnemonicParsing="false" onAction="#onActionDissociatePart"
                             text="Removed Associated Part" AnchorPane.rightAnchor="32.0"/>
                 </AnchorPane>
                 <HBox alignment="CENTER_RIGHT" spacing="32.0">

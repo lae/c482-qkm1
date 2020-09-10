@@ -46,16 +46,6 @@ public class MainScreenController implements Initializable {
     @FXML
     private TableColumn<Product, Double> productPriceCol;
 
-    public Part selectPart(int id) {
-        for (Part part : Inventory.getAllParts()) {
-            if (part.getId() == id) {
-                return part;
-            }
-        }
-
-        return null;
-    }
-
     /**
      * Refreshes the Parts TableView with search input.
      */
@@ -70,21 +60,24 @@ public class MainScreenController implements Initializable {
      */
     private void refreshPartTable(boolean reset) {
         String searchInput = partSearch.getText();
+        partTableView.setItems(Inventory.getFilteredParts(searchInput, reset));
         if (searchInput.isEmpty()) {
             partTablePlaceholder.setText("Click Add to add a new part.");
         } else {
             partTablePlaceholder.setText("No items matched your search query. Please try again.");
+            if (partTableView.getItems().size() > 0) {
+                partTableView.getSelectionModel().select(0);
+            }
         }
-        partTableView.setItems(Inventory.getFilteredParts(searchInput, reset));
     }
 
     /**
      * Filters the PartTable by user-provided query.
      *
-     * @param event any keyboard action the user performs.
+     * @param keyEvent any keyboard action the user performs.
      */
     @FXML
-    public void onKeySearchPart(KeyEvent event) {
+    public void onKeySearchPart(KeyEvent keyEvent) {
         refreshPartTable();
     }
 
@@ -161,12 +154,15 @@ public class MainScreenController implements Initializable {
      */
     private void refreshProductTable(boolean reset) {
         String searchInput = productSearch.getText();
+        productTableView.setItems(Inventory.getFilteredProducts(searchInput, reset));
         if (searchInput.isEmpty()) {
             productTablePlaceholder.setText("Click Add to add a new product.");
         } else {
             productTablePlaceholder.setText("No items matched your search query. Please try again.");
+            if (productTableView.getItems().size() > 0) {
+                productTableView.getSelectionModel().select(0);
+            }
         }
-        productTableView.setItems(Inventory.getFilteredProducts(searchInput, reset));
     }
 
     /**
@@ -179,16 +175,63 @@ public class MainScreenController implements Initializable {
         refreshProductTable();
     }
 
+    /**
+     * Switches to an Add Product form.
+     *
+     * @param actionEvent an action a user performs.
+     * @throws IOException an I/O error.
+     */
     @FXML
-    public void onActionAddProduct(ActionEvent actionEvent) {
+    public void onActionAddProduct(ActionEvent actionEvent) throws IOException {
+        stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+        FXMLLoader loader = loadView(stage, "/view/EditProductView.fxml");
+        EditProductController editCtrl = loader.getController();
+        editCtrl.startAdd();
     }
 
+    /**
+     * Switches to a Modify Product form.
+     *
+     * @param actionEvent an action a user performs.
+     * @throws IOException an I/O error.
+     */
     @FXML
-    public void onActionModifyProduct(ActionEvent actionEvent) {
+    public void onActionModifyProduct(ActionEvent actionEvent) throws IOException {
+        if (productTableView.getSelectionModel().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "You must select a product to modify!");
+            fixAlertDisplay(alert);
+            alert.showAndWait();
+            return;
+        }
+
+        stage = (Stage) ((Button) actionEvent.getSource()).getScene().getWindow();
+        FXMLLoader loader = loadView(stage, "/view/EditProductView.fxml");
+        EditProductController editCtrl = loader.getController();
+        editCtrl.startEdit(productTableView.getSelectionModel().getSelectedIndex(), productTableView.getSelectionModel().getSelectedItem());
     }
 
+    /**
+     * Deletes a Product that the user has selected.
+     *
+     * @param actionEvent an action a user performs.
+     */
     @FXML
     public void onActionDeleteProduct(ActionEvent actionEvent) {
+        if (productTableView.getSelectionModel().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "You must select a product to delete!");
+            fixAlertDisplay(alert);
+            alert.showAndWait();
+            return;
+        }
+
+        Product selectedProduct = productTableView.getSelectionModel().getSelectedItem();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete the following product?\n\n" + selectedProduct.getName());
+        fixAlertDisplay(alert);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            Inventory.deleteProduct(selectedProduct);
+            refreshProductTable(true);
+        }
     }
 
     @FXML
