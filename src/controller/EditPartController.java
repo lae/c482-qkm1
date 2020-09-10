@@ -18,6 +18,8 @@ import static ims.Validation.validateDouble;
 import static ims.Validation.validatePositiveInteger;
 
 /**
+ * Controller for the add/modify part screens.
+ *
  * @author Musee Ullah
  */
 public class EditPartController {

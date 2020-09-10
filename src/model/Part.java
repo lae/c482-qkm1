@@ -1,6 +1,8 @@
 package model;
 
 /**
+ * A model for parts.
+ *
  * @author Musee Ullah
  */
 public abstract class Part {

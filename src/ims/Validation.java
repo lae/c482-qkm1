@@ -5,6 +5,8 @@ import javafx.scene.control.TextField;
 import java.util.ArrayList;
 
 /**
+ * Provides validation functions for user input.
+ *
  * @author Musee Ullah
  */
 public class Validation {

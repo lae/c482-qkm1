@@ -23,6 +23,11 @@ import static ims.Main.*;
 import static ims.Validation.validateDouble;
 import static ims.Validation.validatePositiveInteger;
 
+/**
+ * Controller for the add/modify product screens.
+ *
+ * @author Musee Ullah
+ */
 public class EditProductController implements Initializable {
     private static final String newIdText = "Automatically Generated";
     private Stage stage;

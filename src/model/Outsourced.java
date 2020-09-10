@@ -1,6 +1,8 @@
 package model;
 
 /**
+ * A part that is bought from other companies.
+ *
  * @author Musee Ullah
  */
 public class Outsourced extends Part {

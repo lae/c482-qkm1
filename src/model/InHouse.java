@@ -1,6 +1,8 @@
 package model;
 
 /**
+ * A part that is created in-house.
+ *
  * @author Musee Ullah
  */
 public class InHouse extends Part {

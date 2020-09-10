@@ -4,6 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
+ * A model for products.
+ *
  * @author Musee Ullah
  */
 public class Product {

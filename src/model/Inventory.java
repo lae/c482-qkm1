@@ -4,6 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 /**
+ * Application-internal database for parts and products.
+ *
  * @author Musee Ullah
  */
 public class Inventory {

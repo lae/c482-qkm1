@@ -17,6 +17,11 @@ import model.Product;
 
 import java.io.IOException;
 
+/**
+ * The main application.
+ *
+ * @author Musee Ullah
+ */
 public class Main extends Application {
     /**
      * Main entrypoint into application.

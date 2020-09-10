@@ -21,6 +21,8 @@ import static ims.Main.fixAlertDisplay;
 import static ims.Main.loadView;
 
 /**
+ * Controller for the main screen.
+ *
  * @author Musee Ullah
  */
 public class MainScreenController implements Initializable {
