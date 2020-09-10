@@ -25,34 +25,24 @@ import static ims.Main.loadView;
  */
 public class MainScreenController implements Initializable {
     Stage stage;
-
     @FXML
     private Label partTablePlaceholder, productTablePlaceholder;
-
     @FXML
     private TextField partSearch, productSearch;
-
     @FXML
     private TableView<Part> partTableView;
-
     @FXML
     private TableColumn<Part, Integer> partIdCol, partInventoryCol;
-
     @FXML
     private TableColumn<Part, String> partNameCol;
-
     @FXML
     private TableColumn<Part, Double> partPriceCol;
-
     @FXML
     private TableView<Product> productTableView;
-
     @FXML
     private TableColumn<Product, Integer> productIdCol, productInventoryCol;
-
     @FXML
     private TableColumn<Product, String> productNameCol;
-
     @FXML
     private TableColumn<Product, Double> productPriceCol;
 
