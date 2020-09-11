@@ -225,6 +225,13 @@ public class MainScreenController implements Initializable {
             alert.showAndWait();
             return;
         }
+        if (!productTableView.getSelectionModel().getSelectedItem().getAllAssociatedParts().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "The selected product has associated parts.\n" +
+                    "Disassociate the parts before deleting.");
+            fixAlertDisplay(alert);
+            alert.showAndWait();
+            return;
+        }
 
         Product selectedProduct = productTableView.getSelectionModel().getSelectedItem();
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you want to delete the following product?\n\n" + selectedProduct.getName());
