@@ -1,0 +1,9 @@
+= C482 - Inventory Management System
+
+This is a JavaFX application developed for the performance assessment for C482 -
+Software I at Western Governor's University. It is written in spec to the
+version of the curriculum that uses Java 11 (in use in September 2020).
+
+You can use this as a learning utility (I don't exactly write Java for a living
+though) but please refrain from copy-pasting or otherwise reusing portions of
+this code as-is within your assessment.
